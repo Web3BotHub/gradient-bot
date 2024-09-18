@@ -1,0 +1,7 @@
+.DS_Store
+.env
+.proxies
+.proxies.txt
+connected.png error.png login.png status.png
+error.log
+dom.html
