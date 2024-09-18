@@ -281,9 +281,9 @@ async function getProxyIpInfo(proxyUrl) {
     // <div class="absolute mt-3 right-0 z-10">
     const supportStatus = await driver.findElement(By.css('.absolute.mt-3.right-0.z-10')).getText()
 
-    // // <div class="Helveticae w-1/2 flex justify-center items-center text-[14px] select-none cursor-pointer z-20 text-white">Reward</div>
-    // const statusTab = await driver.findElement(By.xpath('//div[contains(text(), "Status")]'))
-    // const rewardTab = await driver.findElement(By.xpath('//div[contains(text(), "Reward")]'))
+    // <div class="Helveticae w-1/2 flex justify-center items-center text-[14px] select-none cursor-pointer z-20 text-white">Reward</div>
+    const statusTab = await driver.findElement(By.xpath('//div[contains(text(), "Status")]'))
+    const rewardTab = await driver.findElement(By.xpath('//div[contains(text(), "Reward")]'))
 
     // // todaysTaps:
     // // <div class="Helveticae font-bold flex justify-center items-center select-none mt-[2px]" style="font-size: 24px;">0</div>
