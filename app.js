@@ -128,6 +128,7 @@ async function getProxyIpInfo(proxyUrl) {
   options.addArguments(`user-agent=${USER_AGENT}`)
   options.addArguments('--headless')
   options.addArguments('--disable-dev-shm-usage')
+  options.addArguments('--disable-gpu')
   options.addArguments('--no-sandbox')
 
   options.setProxy(proxy.manual({
@@ -187,6 +188,7 @@ async function getProxyIpInfo(proxyUrl) {
   options.addArguments('--headless')
   options.addArguments('--disable-dev-shm-usage')
   options.addArguments('--no-sandbox')
+  options.addArguments('--disable-gpu')
   options.addArguments('--disable-ipv6')
   options.addArguments('--disable-features=InsecureDoNotUseIpv6')
   options.addExtensions(path.resolve(__dirname, EXTENSION_FILENAME))
