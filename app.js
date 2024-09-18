@@ -287,23 +287,23 @@ async function getProxyIpInfo(proxyUrl) {
 
     // todaysTaps:
     // <div class="Helveticae font-bold flex justify-center items-center select-none mt-[2px]" style="font-size: 24px;">0</div>
-    const todaysTaps = await driver.findElement(By.css('.mr-\[8px\].border-theme-gray-border-2 > .font-bold.items-center')).getText()
-    const tadaysUptime = await driver.findElement(By.css('.mr-\[4px\].border-theme-gray-border-2 > .font-bold.items-center')).getText()
+    const todaysTaps = await driver.findElement(By.css('.border-theme-gray-border-2 > .font-bold.items-center')).getText()
+    const tadaysUptime = await driver.findElement(By.css('.border-theme-gray-border-2 > .font-bold.items-center')).getText()
 
     // // click on rewardTab tab
-    // await rewardTab.click()
+    await rewardTab.click()
 
-    // // todayReward:
-    // // <div class="Helveticae font-bold flex justify-center items-center select-none mt-[2px]" style="font-size: 24px;">0</div>
-    // const todayReward = await driver.findElement(By.css('.mr-[8px].border-theme-gray-border-2 > .font-bold.items-center')).getText()
-    // const seasonReward = await driver.findElement(By.css('.mr-[4px].border-theme-gray-border-2 > .font-bold.items-center')).getText()
+    // todayReward:
+    // <div class="Helveticae font-bold flex justify-center items-center select-none mt-[2px]" style="font-size: 24px;">0</div>
+    const todayReward = await driver.findElement(By.css('.border-theme-gray-border-2 > .font-bold.items-center')).getText()
+    const seasonReward = await driver.findElement(By.css('.border-theme-gray-border-2 > .font-bold.items-center')).getText()
 
     console.log({
       support_status: supportStatus,
-      // today_taps: todaysTaps,
-      // today_uptime: tadaysUptime,
-      // today_reward: todayReward,
-      // season_reward: seasonReward,
+      today_taps: todaysTaps,
+      today_uptime: tadaysUptime,
+      today_reward: todayReward,
+      season_reward: seasonReward,
     })
   } catch (error) {
     console.error('Error occurred:', error)
