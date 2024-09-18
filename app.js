@@ -231,6 +231,8 @@ async function getProxyIpInfo(proxyUrl) {
     // 直到找到 "Status" 文本的 div 元素
     await driver.wait(until.elementLocated(By.xpath('//div[contains(text(), "Status")]')), 30000)
 
+    await driver.sleep(5000)
+
     console.log('-> Extension loaded!')
 
     // if there is a page with a button "I got it", click it
