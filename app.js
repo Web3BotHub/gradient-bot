@@ -16,6 +16,8 @@ const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
 
 const USER = process.env.APP_USER || ''
 const PASSWORD = process.env.APP_PASS || ''
+const PROXY_HTTP_PORT = process.env.PROXY_HTTP_PORT || 2000
+const PROXY_SOCKS_PORT = process.env.PROXY_SOCKS_PORT || 2001
 const ALLOW_DEBUG = process.env.ALLOW_DEBUG === 'True'
 const EXTENSION_FILENAME = 'app.crx'
 const PROXY = process.env.PROXY || undefined
@@ -98,29 +100,21 @@ async function getProxyUrl(proxyUrl, schema) {
   }
 
   try {
-    console.log('-> Anonymizing proxy URL:', proxyUrl)
-
-    const anonymizedProxy = await proxyChain.anonymizeProxy(proxyUrl)
-    // parse the anonymized proxy URL
-    const parsedUrl = new URL(anonymizedProxy)
+    const parsedUrl = new URL(proxyUrl)
 
     // extract the host and port
     const proxyHost = parsedUrl.hostname
     const proxyPort = parsedUrl.port
     const newProxyUrl = `${proxyHost}:${proxyPort}`
-
-    // construct the new proxy string
-    console.log('-> Anonymized proxy:', `${newProxyUrl}`)
-
+    console.log(`-> formatted proxy URL (${proxyUrl}) to: ${newProxyUrl}`)
     return newProxyUrl
   } catch (error) {
-    console.error(`-> Error anonymizing proxy URL (${proxyUrl}):`, error)
+    console.error(`-> Error proxy URL (${proxyUrl}):`, error)
     return proxyUrl
   }
 }
 
 async function getProxyIpInfo(proxyUrl) {
-  // const url = `https://httpbin.org/ip`
   const url = 'http://myip.ipip.net'
 
   console.log('-> Getting proxy IP info:', proxyUrl)
@@ -169,7 +163,8 @@ async function getProxyIpInfo(proxyUrl) {
   if (PROXY) {
     const httpProxyUrl = await getProxyUrl(PROXY, 'http')
     // const wssProxyUrl = await getProxyUrl(PROXY.replace('http://', 'ws://').replace(1337, 1338), 'socks')
-    const wssProxyUrl = await getProxyUrl(PROXY.replace('http://', 'ws://'), 'socks5')
+    //todo: replace websocket port
+    const wssProxyUrl = await getProxyUrl(PROXY, 'socks5')
 
     options.setProxy(proxy.manual({
       http: httpProxyUrl,
@@ -177,7 +172,8 @@ async function getProxyIpInfo(proxyUrl) {
     }))
 
     // options.setProxy(proxy.socks(wssProxyUrl, 5))
-    options.addArguments(`--proxy-server=socks5://${wssProxyUrl}`)
+    options.addArguments(`--proxy-server=socks5://eu.stormip.cn:2000`)
+    options.addArguments('--proxy-auth=storm-overtrue2_ip-217.180.20.38:123457')
 
     console.log('-> Using proxy http:', httpProxyUrl)
     console.log('-> Using proxy ws:', wssProxyUrl)
@@ -189,13 +185,18 @@ async function getProxyIpInfo(proxyUrl) {
 
   options.addArguments(`user-agent=${USER_AGENT}`)
   options.addArguments('--headless')
+  options.addArguments('--ignore-certificate-errors')
   options.addArguments('--disable-dev-shm-usage')
   options.addArguments('--no-sandbox')
-  options.addArguments('--disable-gpu')
   options.addArguments('--disable-ipv6')
   options.addArguments('--remote-allow-origins=*')
-  options.addArguments('--disable-features=InsecureDoNotUseIpv6')
   options.addExtensions(path.resolve(__dirname, EXTENSION_FILENAME))
+
+  // enable debug
+  if (ALLOW_DEBUG) {
+    options.addArguments('--enable-logging')
+    options.addArguments('--v=1')
+  }
 
   let driver
   try {
