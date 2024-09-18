@@ -307,17 +307,11 @@ async function getProxyIpInfo(proxyUrl) {
       today_reward: todayReward,
       season_reward: seasonReward,
     })
-
-
-    console.log('-> API started! Waiting for requests...')
   } catch (error) {
     console.error('Error occurred:', error)
     if (driver) {
       await generateErrorReport(driver)
-    }
-  } finally {
-    if (driver) {
-      await driver.quit()
+      driver.quit()
     }
   }
 })()
