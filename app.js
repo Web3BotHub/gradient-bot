@@ -309,6 +309,9 @@ async function getProxyIpInfo(proxyUrl) {
     })
   } catch (error) {
     console.error('Error occurred:', error)
+    // show error line
+    console.error(error.stack)
+
     if (driver) {
       await generateErrorReport(driver)
       driver.quit()
