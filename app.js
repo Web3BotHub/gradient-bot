@@ -287,8 +287,8 @@ async function getProxyIpInfo(proxyUrl) {
 
     // todaysTaps:
     // <div class="Helveticae font-bold flex justify-center items-center select-none mt-[2px]" style="font-size: 24px;">0</div>
-    const todaysTaps = await driver.findElement(By.css('.mr-[8px].border-theme-gray-border-2 > .font-bold.items-center')).getText()
-    const tadaysUptime = await driver.findElement(By.css('.mr-[4px].border-theme-gray-border-2 > .font-bold.items-center')).getText()
+    const todaysTaps = await driver.findElement(By.css('.mr-\[8px\].border-theme-gray-border-2 > .font-bold.items-center')).getText()
+    const tadaysUptime = await driver.findElement(By.css('.mr-\[4px\].border-theme-gray-border-2 > .font-bold.items-center')).getText()
 
     // // click on rewardTab tab
     // await rewardTab.click()
