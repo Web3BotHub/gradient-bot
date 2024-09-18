@@ -317,4 +317,11 @@ async function getProxyIpInfo(proxyUrl) {
       driver.quit()
     }
   }
+
+  console.log('-> Done!')
+
+  // keep the process running
+  setInterval(() => {
+    console.log('-> Running...')
+  }, 1000)
 })()
