@@ -219,6 +219,8 @@ async function getProxyIpInfo(proxyUrl) {
     const passwordInput = By.css('[type="password"]')
     const loginButton = By.css('button')
 
+    await takeScreenshot(driver, 'login-page.png')
+
     await driver.wait(until.elementLocated(emailInput), 30000)
     await driver.wait(until.elementLocated(passwordInput), 30000)
     await driver.wait(until.elementLocated(loginButton), 30000)
