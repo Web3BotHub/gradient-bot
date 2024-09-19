@@ -7,13 +7,16 @@ const proxies = fs.readFileSync(path.resolve(__dirname, 'proxies.txt'), 'utf-8')
 const { execSync } = require('child_process')
 const USER = process.env.APP_USER || ''
 const PASSWORD = process.env.APP_PASS || ''
-const PROXY_HTTP_PORT = process.env.PROXY_HTTP_PORT || undefined
-const PROXY_SOCKS_PORT = process.env.PROXY_SOCKS_PORT || undefined
+
+if (!USER || !PASSWORD) {
+  console.error("Please set APP_USER and APP_PASS env variables")
+  process.exit()
+}
 
 let index = 0
 for (const proxy of proxies) {
   const name = `gradient-${index++}`
-  execSync(`PROXY=${proxy} APP_USER='${USER}' APP_PASS='${PASSWORD}' PROXY_HTTP_PORT=${PROXY_HTTP_PORT} PROXY_SOCKS_PORT=${PROXY_SOCKS_PORT} pm2 start index.js --name gradient-${proxy}`)
+  execSync(`PROXY=${proxy} APP_USER='${USER}' APP_PASS='${PASSWORD}' pm2 start app.js --name ${name}`)
   console.log(`-> Started ${name} with proxy ${proxy}`)
 }
 
