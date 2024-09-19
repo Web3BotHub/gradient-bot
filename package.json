@@ -2,9 +2,7 @@
   "dependencies": {
     "crypto": "^1.0.1",
     "dotenv": "^16.4.5",
-    "express": "^4.21.0",
     "form-data": "^4.0.0",
-    "proxy-chain": "^2.5.3",
     "request": "^2.88.2",
     "selenium-webdriver": "^4.24.1"
   }

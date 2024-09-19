@@ -1,12 +1,11 @@
 const { Builder, By, until, Capabilities } = require('selenium-webdriver')
 const chrome = require('selenium-webdriver/chrome')
-const express = require('express')
+const url = require('url')
 const fs = require('fs')
 const crypto = require('crypto')
 const request = require('request')
 const path = require('path')
 const FormData = require('form-data')
-const proxyChain = require('proxy-chain')
 const proxy = require('selenium-webdriver/proxy')
 require('dotenv').config()
 
@@ -100,23 +99,20 @@ async function generateErrorReport(driver) {
 
 // proxyUrl: http://username:password@host:port
 // proxyUrl: socks5://username:password@host:port
-async function parseProxyUrl(proxyUrl) {
+function parseProxyUrl(proxyUrl) {
   try {
-    const parsedUrl = new URL(proxyUrl)
-
-    // extract the host and port
-    const host = parsedUrl.hostname
-    const port = parsedUrl.port
-    const username = parsedUrl.username
-    const password = parsedUrl.password
+    const parsedUrl = url.parse(proxyUrl)
 
     return {
       server: {
-        http: `${host}:${PROXY_HTTP_PORT}`,
-        https: `${host}:${PROXY_HTTP_PORT}`,
-        socks: `${host}:${PROXY_SOCKS_PORT}`,
+        http: `${parsedUrl.hostname}:${PROXY_HTTP_PORT}`,
+        https: `${parsedUrl.hostname}:${PROXY_HTTP_PORT}`,
+        socks: `${parsedUrl.hostname}:${PROXY_SOCKS_PORT}`,
       },
-      auth: `${username}:${password}`
+      parsedUrl,
+      host: parsedUrl.hostname,
+      port: parsedUrl.port,
+      auth: parsedUrl.auth,
     }
   } catch (error) {
     console.error(`-> Error proxy URL (${proxyUrl}):`, error)
