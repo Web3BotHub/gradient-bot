@@ -90,20 +90,6 @@ async function generateErrorReport(driver) {
     "error.log",
     logs.map((log) => `${log.level.name}: ${log.message}`).join("\n")
   )
-
-  const form = new FormData()
-  form.append("file", fs.createReadStream("error.png"))
-
-  const response = await new Promise((resolve, reject) => {
-    form.submit("https://imagebin.ca/upload.php", (err, res) => {
-      if (err) return reject(err)
-      res.resume()
-      res.on("data", (chunk) => process.stdout.write(chunk))
-      res.on("end", () => resolve())
-    })
-  })
-
-  console.log("-> Error report uploaded:", response)
 }
 
 async function getDriverOptions() {
@@ -123,7 +109,7 @@ async function getDriverOptions() {
     let proxyUrl = PROXY
 
     // if no scheme, add http://
-    if (!/^https?:\/\//.test(proxyUrl)) {
+    if (!proxyUrl.includes("://")) {
       proxyUrl = `http://${proxyUrl}`
     }
 
@@ -137,6 +123,11 @@ async function getDriverOptions() {
         https: newProxyUrl,
       })
     )
+    const url = new URL(newProxyUrl)
+    console.log("-> Proxy host:", url.hostname)
+    console.log("-> Proxy port:", url.port)
+    options.addArguments(`--proxy-server=socks5://${url.hostname}:${url.port}`)
+    console.log("-> Setting up proxy done!")
   } else {
     console.log("-> No proxy set!")
   }
@@ -364,9 +355,9 @@ async function getProxyIpInfo(proxyUrl) {
   // keep the process running
   setInterval(() => {
     if (PROXY) {
-      console.log(`-> [${USER}] Running without proxy...`)
-    } else {
       console.log(`-> [${USER}] Running with proxy ${PROXY}...`)
+    } else {
+      console.log(`-> [${USER}] Running without proxy...`)
     }
   }, 3000)
 })()
