@@ -17,8 +17,6 @@ const USER_AGENT =
 
 const USER = process.env.APP_USER || ""
 const PASSWORD = process.env.APP_PASS || ""
-const PROXY_HTTP_PORT = process.env.PROXY_HTTP_PORT || undefined
-const PROXY_SOCKS_PORT = process.env.PROXY_SOCKS_PORT || undefined
 const ALLOW_DEBUG = process.env.ALLOW_DEBUG === "True"
 const EXTENSION_FILENAME = "app.crx"
 const PROXY = process.env.PROXY || undefined
@@ -27,19 +25,10 @@ console.log("-> Starting...")
 console.log("-> User:", USER)
 console.log("-> Pass:", PASSWORD)
 console.log("-> Proxy:", PROXY)
-console.log("-> Proxy HTTP Port:", PROXY_HTTP_PORT)
-console.log("-> Proxy SOCKS Port:", PROXY_SOCKS_PORT)
 console.log("-> Debug:", ALLOW_DEBUG)
 
 if (!USER || !PASSWORD) {
   console.error("Please set APP_USER and APP_PASS env variables")
-  process.exit()
-}
-
-if (PROXY && (!PROXY_HTTP_PORT || !PROXY_SOCKS_PORT)) {
-  console.error(
-    "Please set PROXY_HTTP_PORT and PROXY_SOCKS_PORT env variables"
-  )
   process.exit()
 }
 
