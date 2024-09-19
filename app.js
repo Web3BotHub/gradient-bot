@@ -202,8 +202,6 @@ async function getProxyIpInfo(driver, proxyUrl) {
       30000
     )
 
-    await driver.sleep(5000)
-
     console.log("-> Extension loaded!")
 
     // if there is a page with a button "I got it", click it
