@@ -85,12 +85,21 @@ async function getDriverOptions() {
   const options = new chrome.Options()
 
   options.addArguments(`user-agent=${USER_AGENT}`)
-  options.addArguments("--headless")
+  options.addArguments("--headless=new")
   options.addArguments("--ignore-certificate-errors")
-  options.addArguments("--disable-dev-shm-usage")
+  options.addArguments("--ignore-ssl-errors")
   options.addArguments("--no-sandbox")
-  options.addArguments("--disable-ipv6")
   options.addArguments("--remote-allow-origins=*")
+  options.addArguments("enable-automation")
+  options.addArguments("--dns-prefetch-disable")
+  options.addArguments("--disable-dev-shm-usage")
+  options.addArguments("--disable-ipv6")
+  // options.addArguments("--disable-gpu")
+  options.addArguments("--aggressive-cache-discard")
+  options.addArguments("--disable-cache")
+  options.addArguments("--disable-application-cache")
+  options.addArguments("--disable-offline-load-stale-cache")
+  options.addArguments("--disk-cache-size=0")
 
   if (PROXY) {
     console.log("-> Setting up proxy...", PROXY)
@@ -132,8 +141,7 @@ async function getProxyIpInfo(driver, proxyUrl) {
 
   try {
     await driver.get(url)
-    await driver.sleep(5000)
-
+    await driver.wait(until.elementLocated(By.css("body")), 30000)
     const pageText = await driver.findElement(By.css("body")).getText()
     console.log("-> Proxy IP info:", pageText)
   } catch (error) {
@@ -148,6 +156,8 @@ async function getProxyIpInfo(driver, proxyUrl) {
 
   options.addExtensions(path.resolve(__dirname, EXTENSION_FILENAME))
 
+  console.log(`-> Extension added! ${EXTENSION_FILENAME}`)
+
   // enable debug
   if (ALLOW_DEBUG) {
     options.addArguments("--enable-logging")
@@ -156,10 +166,14 @@ async function getProxyIpInfo(driver, proxyUrl) {
 
   let driver
   try {
+    console.log("-> Starting browser...")
+
     driver = await new Builder()
       .forBrowser("chrome")
       .setChromeOptions(options)
       .build()
+
+    console.log("-> Browser started!")
 
     if (PROXY) {
       await getProxyIpInfo(driver, PROXY)
@@ -326,10 +340,13 @@ async function getProxyIpInfo(driver, proxyUrl) {
     }
   }
 
-  console.log("-> Done!")
+  console.log("-> Lunched!")
 
   // keep the process running
   setInterval(() => {
+    driver.get("https://app.gradient.network/dashboard")
+    driver.wait(until.elementLocated(By.css("body")), 10000)
+
     if (PROXY) {
       console.log(`-> [${USER}] Running with proxy ${PROXY}...`)
     } else {
