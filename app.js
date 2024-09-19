@@ -101,6 +101,11 @@ async function generateErrorReport(driver) {
 // proxyUrl: socks5://username:password@host:port
 function parseProxyUrl(proxyUrl) {
   try {
+    // if without scheme, add http://
+    if (!/^https?:\/\//.test(proxyUrl)) {
+      proxyUrl = `http://${proxyUrl}`
+    }
+
     const parsedUrl = url.parse(proxyUrl)
 
     return {
@@ -109,7 +114,6 @@ function parseProxyUrl(proxyUrl) {
         https: `${parsedUrl.hostname}:${PROXY_HTTP_PORT}`,
         socks: `${parsedUrl.hostname}:${PROXY_SOCKS_PORT}`,
       },
-      parsedUrl,
       host: parsedUrl.hostname,
       port: parsedUrl.port,
       auth: parsedUrl.auth,
@@ -176,10 +180,10 @@ async function getProxyIpInfo(proxyUrl) {
     // }))
 
     options.addArguments(`--proxy-server=socks5://${proxyConfig.server.socks}`)
-    options.addArguments(`--proxy-auth=${proxyConfig.auth}`)
+    options.addArguments(`--proxy-auth='${proxyConfig.auth}'`)
 
-    console.log('-> Using proxy:', proxyConfig)
-
+    console.log(`-> Using proxy server: --proxy-server=socks5://${proxyConfig.server.socks}`)
+    console.log(`-> Using proxy auth: --proxy-auth='${proxyConfig.auth}'`)
   } else {
     console.log('-> No proxy set!')
   }
