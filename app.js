@@ -174,6 +174,8 @@ async function getProxyIpInfo(proxyUrl) {
     const proxyConfig = await parseProxyUrl(PROXY)
     await getProxyIpInfo(proxyConfig.server.http)
 
+    console.log('-> Setting up proxy...', proxyConfig)
+
     options.setProxy(proxy.manual({
       http: proxyConfig.server.http,
       https: proxyConfig.server.http,
