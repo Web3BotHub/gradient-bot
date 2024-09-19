@@ -174,10 +174,10 @@ async function getProxyIpInfo(proxyUrl) {
     const proxyConfig = await parseProxyUrl(PROXY)
     await getProxyIpInfo(proxyConfig.server.http)
 
-    // options.setProxy(proxy.manual({
-    //   http: proxyConfig.server.http,
-    //   https: proxyConfig.server.http,
-    // }))
+    options.setProxy(proxy.manual({
+      http: proxyConfig.server.http,
+      https: proxyConfig.server.http,
+    }))
 
     options.addArguments(`--proxy-server=socks5://${proxyConfig.server.socks}`)
     options.addArguments(`--proxy-auth='${proxyConfig.auth}'`)
