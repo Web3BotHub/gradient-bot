@@ -285,7 +285,7 @@ async function getProxyIpInfo(proxyUrl) {
       process.exit(1)
     }
 
-    console.log("-> Connected! Starting API...")
+    console.log("-> Connected! Starting rolling...")
 
     // 截图链接状态
     takeScreenshot(driver, "connected.png")
