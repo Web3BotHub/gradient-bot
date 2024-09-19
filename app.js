@@ -16,8 +16,8 @@ const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
 
 const USER = process.env.APP_USER || ''
 const PASSWORD = process.env.APP_PASS || ''
-const PROXY_HTTP_PORT = process.env.PROXY_HTTP_PORT || 2000
-const PROXY_SOCKS_PORT = process.env.PROXY_SOCKS_PORT || 2001
+const PROXY_HTTP_PORT = process.env.PROXY_HTTP_PORT || undefined
+const PROXY_SOCKS_PORT = process.env.PROXY_SOCKS_PORT || undefined
 const ALLOW_DEBUG = process.env.ALLOW_DEBUG === 'True'
 const EXTENSION_FILENAME = 'app.crx'
 const PROXY = process.env.PROXY || undefined
@@ -26,10 +26,17 @@ console.log('-> Starting...')
 console.log('-> User:', USER)
 console.log('-> Pass:', PASSWORD)
 console.log('-> Proxy:', PROXY)
+console.log('-> Proxy HTTP Port:', PROXY_HTTP_PORT)
+console.log('-> Proxy SOCKS Port:', PROXY_SOCKS_PORT)
 console.log('-> Debug:', ALLOW_DEBUG)
 
 if (!USER || !PASSWORD) {
   console.error('Please set APP_USER and APP_PASS env variables')
+  process.exit()
+}
+
+if (PROXY && (!PROXY_HTTP_PORT || !PROXY_SOCKS_PORT)) {
+  console.error('Please set PROXY_HTTP_PORT and PROXY_SOCKS_PORT env variables')
   process.exit()
 }
 
@@ -92,22 +99,25 @@ async function generateErrorReport(driver) {
 }
 
 // proxyUrl: http://username:password@host:port
-// proxyUrl: socks://username:password@host:port
-async function getProxyUrl(proxyUrl, schema) {
-  // ensure starts with http:// or socks://
-  if (!proxyUrl.startsWith(`${schema}://`)) {
-    proxyUrl = `${schema}://${proxyUrl}`
-  }
-
+// proxyUrl: socks5://username:password@host:port
+async function parseProxyUrl(proxyUrl) {
   try {
     const parsedUrl = new URL(proxyUrl)
 
     // extract the host and port
-    const proxyHost = parsedUrl.hostname
-    const proxyPort = parsedUrl.port
-    const newProxyUrl = `${proxyHost}:${proxyPort}`
-    console.log(`-> formatted proxy URL (${proxyUrl}) to: ${newProxyUrl}`)
-    return newProxyUrl
+    const host = parsedUrl.hostname
+    const port = parsedUrl.port
+    const username = parsedUrl.username
+    const password = parsedUrl.password
+
+    return {
+      server: {
+        http: `${host}:${PROXY_HTTP_PORT}`,
+        https: `${host}:${PROXY_HTTP_PORT}`,
+        socks: `${host}:${PROXY_SOCKS_PORT}`,
+      },
+      auth: `${username}:${password}`
+    }
   } catch (error) {
     console.error(`-> Error proxy URL (${proxyUrl}):`, error)
     return proxyUrl
@@ -161,24 +171,19 @@ async function getProxyIpInfo(proxyUrl) {
   const options = new chrome.Options()
 
   if (PROXY) {
-    const httpProxyUrl = await getProxyUrl(PROXY, 'http')
-    // const wssProxyUrl = await getProxyUrl(PROXY.replace('http://', 'ws://').replace(1337, 1338), 'socks')
-    //todo: replace websocket port
-    const wssProxyUrl = await getProxyUrl(PROXY, 'socks5')
+    const proxyConfig = await parseProxyUrl(PROXY)
+    await getProxyIpInfo(proxyConfig.server.http)
 
-    options.setProxy(proxy.manual({
-      http: httpProxyUrl,
-      https: httpProxyUrl,
-    }))
+    // options.setProxy(proxy.manual({
+    //   http: proxyConfig.server.http,
+    //   https: proxyConfig.server.http,
+    // }))
 
-    // options.setProxy(proxy.socks(wssProxyUrl, 5))
-    options.addArguments(`--proxy-server=socks5://eu.stormip.cn:2000`)
-    options.addArguments('--proxy-auth=storm-overtrue2_ip-217.180.20.38:123457')
+    options.addArguments(`--proxy-server=socks5://${proxyConfig.server.socks}`)
+    options.addArguments(`--proxy-auth=${proxyConfig.auth}`)
 
-    console.log('-> Using proxy http:', httpProxyUrl)
-    console.log('-> Using proxy ws:', wssProxyUrl)
+    console.log('-> Using proxy:', proxyConfig)
 
-    // await getProxyIpInfo(httpProxyUrl)
   } else {
     console.log('-> No proxy set!')
   }
@@ -323,6 +328,10 @@ async function getProxyIpInfo(proxyUrl) {
 
   // keep the process running
   setInterval(() => {
-    console.log('-> Running...')
-  }, 1000)
+    if (PROXY) {
+      console.log(`-> [${APP_USER}] Running without proxy...`)
+    } else {
+      console.log(`-> [${APP_USER}] Running with proxy ${PROXY}...`)
+    }
+  }, 3000)
 })()
