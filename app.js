@@ -124,31 +124,20 @@ async function getDriverOptions() {
   return options
 }
 
-async function getProxyIpInfo(proxyUrl) {
+async function getProxyIpInfo(driver, proxyUrl) {
   // const url = "https://httpbin.org/ip"
   const url = "https://myip.ipip.net"
 
   console.log("-> Getting proxy IP info:", proxyUrl)
 
-  const options = await getDriverOptions(proxyUrl)
-  const driver = new Builder()
-    .forBrowser("chrome")
-    .setChromeOptions(options)
-    .build()
-
   try {
-    console.log("-> Proxy IP info started!")
-
     await driver.get(url)
     await driver.sleep(5000)
 
     const pageText = await driver.findElement(By.css("body")).getText()
     console.log("-> Proxy IP info:", pageText)
   } catch (error) {
-    console.error("-> Error getting proxy IP info:", error)
-  } finally {
-    await driver.quit()
-    console.log("-> Proxy IP info done!")
+    console.error("-> Failed to get proxy IP info:", error)
   }
 }
 
@@ -165,16 +154,16 @@ async function getProxyIpInfo(proxyUrl) {
     options.addArguments("--v=1")
   }
 
-  if (PROXY) {
-    await getProxyIpInfo(PROXY)
-  }
-
   let driver
   try {
     driver = await new Builder()
       .forBrowser("chrome")
       .setChromeOptions(options)
       .build()
+
+    if (PROXY) {
+      await getProxyIpInfo(driver, PROXY)
+    }
 
     console.log("-> Started! Logging in https://app.gradient.network/...")
     await driver.get("https://app.gradient.network/")
