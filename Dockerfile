@@ -8,6 +8,7 @@ WORKDIR /app
 
 RUN apt-get update -qq -y && \
     apt-get install -y \
+        vim \
         libasound2 \
         libatk-bridge2.0-0 \
         libgtk-4-1 \

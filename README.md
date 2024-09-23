@@ -25,7 +25,7 @@ docker run -d \
   -e APP_USER=user@mail.com \
   -e APP_PASS=password \
   -v ./proxies.txt:/app/proxies.txt \
-  web3bothub/gradient-bot
+  overtrue/gradient-bot
 ```
 
 注意：`proxies.txt` 路径请替换为正确的路径，或者先 `cd` 到 `proxies.txt` 所在目录再执行 docker run 命令。

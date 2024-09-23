@@ -2,4 +2,4 @@
 
 node /app/start.js
 
-bash
+pm2 logs

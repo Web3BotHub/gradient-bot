@@ -285,49 +285,8 @@ async function getProxyIpInfo(driver, proxyUrl) {
       .findElement(By.css(".absolute.mt-3.right-0.z-10"))
       .getText()
 
-    // <div class="Helveticae w-1/2 flex justify-center items-center text-[14px] select-none cursor-pointer z-20 text-white">Reward</div>
-    const statusTab = await driver.findElement(
-      By.xpath('//div[contains(text(), "Status")]')
-    )
-    const rewardTab = await driver.findElement(
-      By.xpath('//div[contains(text(), "Reward")]')
-    )
-
-    // todaysTaps:
-    // <div class="Helveticae font-bold flex justify-center items-center select-none mt-[2px]" style="font-size: 24px;">0</div>
-    const todaysTaps = await driver
-      .findElement(
-        By.css(".border-theme-gray-border-2 > .font-bold.items-center")
-      )
-      .getText()
-    const tadaysUptime = await driver
-      .findElement(
-        By.css(".border-theme-gray-border-2 > .font-bold.items-center")
-      )
-      .getText()
-
-    // // click on rewardTab tab
-    await rewardTab.click()
-
-    // todayReward:
-    // <div class="Helveticae font-bold flex justify-center items-center select-none mt-[2px]" style="font-size: 24px;">0</div>
-    const todayReward = await driver
-      .findElement(
-        By.css(".border-theme-gray-border-2 > .font-bold.items-center")
-      )
-      .getText()
-    const seasonReward = await driver
-      .findElement(
-        By.css(".border-theme-gray-border-2 > .font-bold.items-center")
-      )
-      .getText()
-
     console.log({
       support_status: supportStatus,
-      today_taps: todaysTaps,
-      today_uptime: tadaysUptime,
-      today_reward: todayReward,
-      season_reward: seasonReward,
     })
   } catch (error) {
     console.error("Error occurred:", error)
@@ -337,6 +296,7 @@ async function getProxyIpInfo(driver, proxyUrl) {
     if (driver) {
       await generateErrorReport(driver)
       driver.quit()
+      process.exit(1)
     }
   }
 
