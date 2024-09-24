@@ -253,7 +253,8 @@ async function getProxyIpInfo(driver, proxyUrl) {
       30000
     )
 
-    const statusBadge = await driver
+    // <div class="absolute mt-3 right-0 z-10">
+    const supportStatus = await driver
       .findElement(By.css(".absolute.mt-3.right-0.z-10"))
       .getText()
 
@@ -264,9 +265,9 @@ async function getProxyIpInfo(driver, proxyUrl) {
 
     await takeScreenshot(driver, "status.png")
 
-    console.log("-> Status:", statusBadge)
+    console.log("-> Status:", supportStatus)
 
-    if (statusBadge.includes("Disconnected")) {
+    if (supportStatus.includes("Disconnected")) {
       console.log(
         "-> Failed to connect! may be the proxy has been banned \nGenerating error report..."
       )
@@ -280,14 +281,24 @@ async function getProxyIpInfo(driver, proxyUrl) {
     // 截图链接状态
     takeScreenshot(driver, "connected.png")
 
-    // <div class="absolute mt-3 right-0 z-10">
-    const supportStatus = await driver
-      .findElement(By.css(".absolute.mt-3.right-0.z-10"))
-      .getText()
-
     console.log({
       support_status: supportStatus,
     })
+
+    console.log("-> Lunched!")
+
+    // keep the process running
+    setInterval(() => {
+      driver.getTitle().then((title) => {
+        console.log(`-> [${USER}] Running...`, title)
+      })
+
+      if (PROXY) {
+        console.log(`-> [${USER}] Running with proxy ${PROXY}...`)
+      } else {
+        console.log(`-> [${USER}] Running without proxy...`)
+      }
+    }, 10000)
   } catch (error) {
     console.error("Error occurred:", error)
     // show error line
@@ -299,18 +310,4 @@ async function getProxyIpInfo(driver, proxyUrl) {
       process.exit(1)
     }
   }
-
-  console.log("-> Lunched!")
-
-  // keep the process running
-  setInterval(() => {
-    driver.get("https://app.gradient.network/dashboard")
-    driver.wait(until.elementLocated(By.css("body")), 10000)
-
-    if (PROXY) {
-      console.log(`-> [${USER}] Running with proxy ${PROXY}...`)
-    } else {
-      console.log(`-> [${USER}] Running without proxy...`)
-    }
-  }, 3000)
 })()
