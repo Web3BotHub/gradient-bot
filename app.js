@@ -1,11 +1,9 @@
-const { Builder, By, until, Capabilities } = require("selenium-webdriver")
+const { Builder, By, until } = require("selenium-webdriver")
 const chrome = require("selenium-webdriver/chrome")
-const url = require("url")
 const fs = require("fs")
 const crypto = require("crypto")
 const request = require("request")
 const path = require("path")
-const FormData = require("form-data")
 const proxy = require("selenium-webdriver/proxy")
 const proxyChain = require("proxy-chain")
 require("dotenv").config()
@@ -17,7 +15,6 @@ const USER_AGENT =
 
 const USER = process.env.APP_USER || ""
 const PASSWORD = process.env.APP_PASS || ""
-const ALLOW_DEBUG = process.env.ALLOW_DEBUG === "True"
 const EXTENSION_FILENAME = "app.crx"
 const PROXY = process.env.PROXY || undefined
 
@@ -25,17 +22,10 @@ console.log("-> Starting...")
 console.log("-> User:", USER)
 console.log("-> Pass:", PASSWORD)
 console.log("-> Proxy:", PROXY)
-console.log("-> Debug:", ALLOW_DEBUG)
 
 if (!USER || !PASSWORD) {
   console.error("Please set APP_USER and APP_PASS env variables")
   process.exit()
-}
-
-if (ALLOW_DEBUG) {
-  console.log(
-    "-> Debugging is enabled! This will generate a screenshot and console logs on error!"
-  )
 }
 
 async function downloadExtension(extensionId) {
@@ -246,11 +236,6 @@ async function getProxyIpInfo(driver, proxyUrl) {
     } catch (error) {
       console.log("-> Gradient is available in your region. ")
     }
-
-    await driver.wait(
-      until.elementLocated(By.xpath('//*[contains(text(), "Today\'s Taps")]')),
-      30000
-    )
 
     // <div class="absolute mt-3 right-0 z-10">
     const supportStatus = await driver
