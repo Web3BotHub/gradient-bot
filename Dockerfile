@@ -15,12 +15,12 @@ RUN apt-get update -qq -y && \
         libnss3 \
         xdg-utils \
         wget && \
-    wget -q -O chrome-linux64.zip https://bit.ly/chrome-linux64-121-0-6167-85 && \
+    wget -q -O chrome-linux64.zip https://bit.ly/chrome-linux64-129-0-6668-70 && \
     unzip chrome-linux64.zip && \
     rm chrome-linux64.zip && \
     mv chrome-linux64 /opt/chrome/ && \
     ln -s /opt/chrome/chrome /usr/local/bin/ && \
-    wget -q -O chromedriver-linux64.zip https://bit.ly/chromedriver-linux64-121-0-6167-85 && \
+    wget -q -O chromedriver-linux64.zip https://bit.ly/chromedriver-linux64-129-0-6668-70 && \
     unzip -j chromedriver-linux64.zip chromedriver-linux64/chromedriver && \
     rm chromedriver-linux64.zip && \
     mv chromedriver /usr/local/bin/
@@ -28,6 +28,7 @@ RUN apt-get update -qq -y && \
 ADD . /app/
 
 ENV CHROMEDRIVER_SKIP_DOWNLOAD=true
+ENV ENABLE_DOWNLOADS=false
 
 # install dependencies
 RUN npm install --omit=dev

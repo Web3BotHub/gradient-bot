@@ -11,7 +11,7 @@ require("dotenv").config()
 const extensionId = "caacbgbklghmpodbdafajbgdnegacfmo"
 const CRX_URL = `https://clients2.google.com/service/update2/crx?response=redirect&prodversion=98.0.4758.102&acceptformat=crx2,crx3&x=id%3D${extensionId}%26uc&nacl_arch=x86-64`
 const USER_AGENT =
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36"
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36"
 
 const USER = process.env.APP_USER || ""
 const PASSWORD = process.env.APP_PASS || ""
@@ -77,24 +77,21 @@ async function getDriverOptions() {
 
   console.log(`-> Setting up driver options with userId: ${userId}...`)
 
-  options.addArguments("--no-sandbox")
-  options.addArguments("--headless=new")
+  // options.addArguments("--no-sandbox")
+  options.addArguments("--headless")
   options.addArguments(`user-agent=${USER_AGENT}`)
+  options.addArguments("--remote-allow-origins=*")
+  options.addArguments("--disable-dev-shm-usage")
+  options.addArguments("--incognito")
+  options.addArguments("--start-maximized")
+  options.addArguments("--disable-popup-blocking")
+  // options.addArguments("--disable-gpu")
+  options.addArguments("--blink-settings=imagesEnabled=false")
+  options.addArguments("--allow-running-insecure-content")
+  options.addArguments("--disable-web-security")
   options.addArguments("--ignore-certificate-errors")
   options.addArguments("--ignore-ssl-errors")
   options.addArguments("--remote-allow-origins=*")
-  options.addArguments("--dns-prefetch-disable")
-  options.addArguments("--disable-dev-shm-usage")
-  options.addArguments("--disable-ipv6")
-  options.addArguments("--disable-cache")
-  options.addArguments("--disable-application-cache")
-  options.addArguments("--disable-offline-load-stale-cache")
-  options.addArguments("--disable-infobars")
-  options.addArguments("--disable-notifications")
-  options.addArguments("--disk-cache-size=0")
-  options.addArguments("--incognito")
-  options.addArguments("--start-maximized")
-  // options.addArguments("--blink-settings=imagesEnabled=false")
 
   if (PROXY) {
     console.log("-> Setting up proxy...", PROXY)
@@ -120,7 +117,7 @@ async function getDriverOptions() {
     const url = new URL(newProxyUrl)
     console.log("-> Proxy host:", url.hostname)
     console.log("-> Proxy port:", url.port)
-    options.addArguments(`--proxy-server=${url.hostname}:${url.port}`)
+    // options.addArguments(`--proxy-server=socks5://${url.hostname}:${url.port}`)
     console.log("-> Setting up proxy done!")
   } else {
     console.log("-> No proxy set!")

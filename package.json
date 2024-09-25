@@ -5,6 +5,6 @@
     "form-data": "^4.0.0",
     "proxy-chain": "^2.5.3",
     "request": "^2.88.2",
-    "selenium-webdriver": "^4.24.1"
+    "selenium-webdriver": "^4.25.0"
   }
 }
