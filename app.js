@@ -83,23 +83,28 @@ async function generateErrorReport(driver) {
 
 async function getDriverOptions() {
   const options = new chrome.Options()
+  const userId = USER.replace("@", "_").replace(".", "_").replace("+", "_")
 
-  options.addArguments(`user-agent=${USER_AGENT}`)
+  console.log(`-> Setting up driver options with userId: ${userId}...`)
+
+  options.addArguments("--no-sandbox")
   options.addArguments("--headless=new")
+  options.addArguments(`user-agent=${USER_AGENT}`)
   options.addArguments("--ignore-certificate-errors")
   options.addArguments("--ignore-ssl-errors")
-  options.addArguments("--no-sandbox")
   options.addArguments("--remote-allow-origins=*")
-  options.addArguments("enable-automation")
   options.addArguments("--dns-prefetch-disable")
   options.addArguments("--disable-dev-shm-usage")
   options.addArguments("--disable-ipv6")
-  // options.addArguments("--disable-gpu")
-  options.addArguments("--aggressive-cache-discard")
   options.addArguments("--disable-cache")
   options.addArguments("--disable-application-cache")
   options.addArguments("--disable-offline-load-stale-cache")
+  options.addArguments("--disable-infobars")
+  options.addArguments("--disable-notifications")
   options.addArguments("--disk-cache-size=0")
+  options.addArguments("--incognito")
+  options.addArguments("--start-maximized")
+  // options.addArguments("--blink-settings=imagesEnabled=false")
 
   if (PROXY) {
     console.log("-> Setting up proxy...", PROXY)
@@ -157,12 +162,6 @@ async function getProxyIpInfo(driver, proxyUrl) {
   options.addExtensions(path.resolve(__dirname, EXTENSION_FILENAME))
 
   console.log(`-> Extension added! ${EXTENSION_FILENAME}`)
-
-  // enable debug
-  if (ALLOW_DEBUG) {
-    options.addArguments("--enable-logging")
-    options.addArguments("--v=1")
-  }
 
   let driver
   try {
