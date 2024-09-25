@@ -114,12 +114,13 @@ async function getDriverOptions() {
       proxy.manual({
         http: newProxyUrl,
         https: newProxyUrl,
+        bypass: ["localhost", "127.0.0.1"],
       })
     )
     const url = new URL(newProxyUrl)
     console.log("-> Proxy host:", url.hostname)
     console.log("-> Proxy port:", url.port)
-    options.addArguments(`--proxy-server=socks5://${url.hostname}:${url.port}`)
+    options.addArguments(`--proxy-server=${url.hostname}:${url.port}`)
     console.log("-> Setting up proxy done!")
   } else {
     console.log("-> No proxy set!")
