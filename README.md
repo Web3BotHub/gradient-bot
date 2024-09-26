@@ -1,3 +1,11 @@
+# Gradient network 挂机脚本
+
+## 项目地址：[https://app.gradient.network/](https://app.gradient.network/signup?code=EK8G9A)
+## 代理 IP：[https://app.proxy-cheap.com](https://app.proxy-cheap.com/r/ksvW8Z)
+## 使用文档：https://mirror.xyz/0xc3d4b59Dd687746871dABeBeAF41243F7252b7b8/GBVnzYJqWH_lyQ8LxYDXag85bLJCfQgWzpOxTeqH6co
+
+> 下面不用看
+
 # Proxy
 
 format:
