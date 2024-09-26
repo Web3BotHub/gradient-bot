@@ -92,6 +92,11 @@ async function getDriverOptions() {
   options.addArguments("--ignore-certificate-errors")
   options.addArguments("--ignore-ssl-errors")
   options.addArguments("--remote-allow-origins=*")
+  options.addArguments("--no-first-run")
+  options.addArguments("--no-default-browser-check")
+  options.addArguments("--disable-default-apps")
+  options.addArguments("--remote-debugging-port=9222")
+
 
   if (PROXY) {
     console.log("-> Setting up proxy...", PROXY)
@@ -117,7 +122,7 @@ async function getDriverOptions() {
     const url = new URL(newProxyUrl)
     console.log("-> Proxy host:", url.hostname)
     console.log("-> Proxy port:", url.port)
-    // options.addArguments(`--proxy-server=socks5://${url.hostname}:${url.port}`)
+    options.addArguments(`--proxy-server=socks5://${url.hostname}:${url.port}`)
     console.log("-> Setting up proxy done!")
   } else {
     console.log("-> No proxy set!")
