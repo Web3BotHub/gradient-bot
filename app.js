@@ -35,10 +35,10 @@ async function downloadExtension(extensionId) {
   console.log("-> Downloading extension from:", url)
 
   // if file exists, return
-  if (fs.existsSync(EXTENSION_FILENAME)) {
-    console.log("-> Extension already downloaded! skip download...")
-    return
-  }
+  // if (fs.existsSync(EXTENSION_FILENAME)) {
+  //   console.log("-> Extension already downloaded! skip download...")
+  //   return
+  // }
 
   return new Promise((resolve, reject) => {
     request({ url, headers, encoding: null }, (error, response, body) => {
@@ -47,10 +47,8 @@ async function downloadExtension(extensionId) {
         return reject(error)
       }
       fs.writeFileSync(EXTENSION_FILENAME, body)
-      if (ALLOW_DEBUG) {
-        const md5 = crypto.createHash("md5").update(body).digest("hex")
-        console.log("-> Extension MD5: " + md5)
-      }
+      const md5 = crypto.createHash("md5").update(body).digest("hex")
+      console.log("-> Extension MD5: " + md5)
       resolve()
     })
   })
@@ -77,26 +75,16 @@ async function getDriverOptions() {
 
   console.log(`-> Setting up driver options with userId: ${userId}...`)
 
-  // options.addArguments("--no-sandbox")
-  options.addArguments("--headless")
-  options.addArguments(`user-agent=${USER_AGENT}`)
-  options.addArguments("--remote-allow-origins=*")
+  options.addArguments("--no-sandbox")
+  options.addArguments("--headless=new")
   options.addArguments("--disable-dev-shm-usage")
-  options.addArguments("--incognito")
+  // options.addArguments("--incognito")
   options.addArguments("--start-maximized")
-  options.addArguments("--disable-popup-blocking")
-  // options.addArguments("--disable-gpu")
-  options.addArguments("--blink-settings=imagesEnabled=false")
-  options.addArguments("--allow-running-insecure-content")
-  options.addArguments("--disable-web-security")
-  options.addArguments("--ignore-certificate-errors")
-  options.addArguments("--ignore-ssl-errors")
   options.addArguments("--remote-allow-origins=*")
   options.addArguments("--no-first-run")
-  options.addArguments("--no-default-browser-check")
-  options.addArguments("--disable-default-apps")
-  options.addArguments("--remote-debugging-port=9222")
-
+  options.addArguments(`user-agent=${USER_AGENT}`)
+  options.addArguments(`--enable-automation`)
+  options.addArguments(`--safebrowsing-disable-download-protection`)
 
   if (PROXY) {
     console.log("-> Setting up proxy...", PROXY)
@@ -132,8 +120,8 @@ async function getDriverOptions() {
 }
 
 async function getProxyIpInfo(driver, proxyUrl) {
-  // const url = "https://httpbin.org/ip"
-  const url = "https://myip.ipip.net"
+  const url = "https://httpbin.org/ip"
+  // const url = "https://myip.ipip.net"
 
   console.log("-> Getting proxy IP info:", proxyUrl)
 

@@ -5,39 +5,22 @@ ENV APP_USER=
 ENV APP_PASS=
 
 ARG JRE_VERSION=17
+ARG TZ=Asia/Beijing
 
 WORKDIR /app
 
 RUN apt-get update -qq -y && \
-    apt-get install -y \
-        vim \
-        libasound2 \
-        libatk-bridge2.0-0 \
-        libgtk-4-1 \
-        libnss3 \
-        libxkbcommon-x11-0 \
-        libxdamage1 \
-        libgbm1 \
-        acl \
-        bzip2 \
-        ca-certificates \
-        tzdata \
-        sudo \
-        unzip \
-        wget \
-        jq \
-        curl \
-        supervisor \
-        gnupg2 \
-        libnss3-tools \
-        openjdk-${JRE_VERSION}-jre-headless
-        xdg-utils \
-        wget \
-    #===================
-    # Timezone settings
-    # Possible alternative: https://github.com/docker/docker/issues/3359#issuecomment-32150214
-    #===================
-    && ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime && \
+    apt-get install -y vim acl bzip2 ca-certificates tzdata sudo unzip jq curl gnupg2 wget xvfb \
+    # Install Google Chrome dependencies
+    libxss1 libappindicator1 libgconf-2-4 \
+    fonts-liberation libasound2 libnspr4 libnss3 libx11-xcb1 libxtst6 lsb-release xdg-utils \
+    libgbm1 libnss3-tools libatk-bridge2.0-0 libgtk-4-1 libx11-xcb1 libxcb-dri3-0
+
+#===================
+# Timezone settings
+# Possible alternative: https://github.com/docker/docker/issues/3359#issuecomment-32150214
+#===================
+RUN ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime && \
     dpkg-reconfigure -f noninteractive tzdata && \
     cat /etc/timezone
 
@@ -88,7 +71,8 @@ RUN DRIVER_ARCH=$(if [ "$(dpkg --print-architecture)" = "amd64" ]; then echo "li
 ADD . /app/
 
 ENV CHROMEDRIVER_SKIP_DOWNLOAD=true
-ENV ENABLE_DOWNLOADS=false
+ENV SE_CHROMEDRIVER=/usr/bin/chromedriver
+ENV SE_CHROME=/usr/bin/google-chrome
 
 # install dependencies
 RUN npm install --omit=dev
