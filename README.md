@@ -47,3 +47,22 @@ docker exec -it <container_id> pm2 logs
 ```bash
 docker rm -f <container_id>
 ```
+
+
+## Note
+
+- Run this bot, and it will update your referrer code to my invite code if you don't have one.
+- You can just run this bot at your own risk, I'm not responsible for any loss or damage caused by this bot. This bot is for educational purposes only.
+
+## Contribution
+
+Feel free to contribute to this project by creating a pull request.
+
+## Support Me
+
+if you want to support me, you can donate to my address:
+
+- TRC20: `TMwJhT5iCsQAfmRRKmAfasAXRaUhPWTSCE`
+- ERC20: `0xa2f5b8d9689d20d452c5340745a9a2c0104c40de`
+- SOLANA: `HCbbrqD9Xvfqx7nWjNPaejYDtXFp4iY8PT7F4i8PpE5K`
+- TON: `UQBD-ms1jA9cmoo8O39BXI6jqh8zwRSoBMUAl4yjEPKD6ata`
